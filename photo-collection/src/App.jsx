@@ -1,32 +1,41 @@
 import React from "react";
 import Collection from "./components/Collection";
 import "./index.css";
+
+
+const categories = [
+  {name: "Все"},
+  {name: "Испания"},
+  {name: "Франция"},
+  {name: "Германия"},
+  {name: "Корея"}
+]
 function App() {
   const [collections, setCollections] = React.useState([]);
-  const fetchPhotos = async ()=>{
+  const [categoryId, setCategoryId] = React.useState(1);
+ React.useEffect(() => {
     try {
-        const response = await fetch(`https://66a9f428613eced4eba6f405.mockapi.io/api/v1/collections`)
-        const data = await response.json()
-        console.log(data)
+      async function fetchData(){
+        const response = await fetch(`https://66a9f428613eced4eba6f405.mockapi.io/api/v1/collections?
+          id=${categoryId? {"id": categoryId} : ''}`);
+        const data = await response.json();
+        console.log(data);
         setCollections(data);
+      }
+      fetchData();
     } catch (error) {
-      console.error('Error fetching photos:', error)
+        console.error('Error fetching photos:', error);
     }
-  }
-
-  React.useEffect(() => {
-      fetchPhotos()
-  }, [])
+}, [categoryId]);
   return (
     <div className="app">
       <h1>Моя коллекция фото</h1>
       <div className="top">
         <ul className="tags">
-          <li className="active">Все</li>
-          <li>Испания</li>
-          <li>Франция</li>
-          <li>Германия</li>
-          <li>Корея</li>
+          {categories
+          .map((obj,i)=>(
+            <li onClick={()=>setCategoryId(i)} className={categoryId===i ? 'active': ''} key={obj.name}>{obj.name}</li>)
+          )}
         </ul>
       </div>
       <div className="content">
