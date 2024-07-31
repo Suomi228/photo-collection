@@ -5,19 +5,19 @@ import "./index.css";
 
 const categories = [
   {name: "Все"},
-  {name: "Испания"},
-  {name: "Франция"},
-  {name: "Германия"},
-  {name: "Корея"}
+  {name: "Spain"},
+  {name: "France"},
+  {name: "Germany"},
+  {name: "Korea"}
 ]
 function App() {
   const [collections, setCollections] = React.useState([]);
   const [categoryId, setCategoryId] = React.useState(1);
- React.useEffect(() => {
+  React.useEffect(() => {
     try {
       async function fetchData(){
-        const response = await fetch(`https://66a9f428613eced4eba6f405.mockapi.io/api/v1/collections?
-          id=${categoryId? {"id": categoryId} : ''}`);
+        const response = await fetch(`
+          https://66a9f428613eced4eba6f405.mockapi.io/api/v1/collections?${categoryId? `id=${categoryId}`: ''}`);
         const data = await response.json();
         console.log(data);
         setCollections(data);
