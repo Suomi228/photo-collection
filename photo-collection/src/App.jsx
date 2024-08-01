@@ -13,24 +13,25 @@ function App() {
   const [collections, setCollections] = React.useState([]);
   const [categoryId, setCategoryId] = React.useState(1);
   const [isLoading, setIsLoading] = React.useState(true);
-
+  const [page, setPage] = React.useState(0);
   React.useEffect(() => {
-  setIsLoading(true);
-  const fetchData = async () => {
-    try {
-      const response = await fetch(`
-        https://66a9f428613eced4eba6f405.mockapi.io/api/v1/collections?${categoryId ? `id=${categoryId}` : ''}`);
-      const data = await response.json();
-      setCollections(data);
-    } catch (error) {
-      console.error('Error fetching photos:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setIsLoading(true);
+    const fetchData = async () => {
+      const category = categoryId ? `category=${categoryId}` : "";
+      const url = `https://66a9f428613eced4eba6f405.mockapi.io/api/v1/collection?page=`;
+      try {
+        const response = await fetch(`${url}${page}&limit=3&${category}`);
+        const data = await response.json();
+        setCollections(data);
+      } catch (error) {
+        console.error("Error fetching photos:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  fetchData();
-}, [categoryId]);
+    fetchData();
+  }, [categoryId, page]);
   return (
     <div className="app">
       <h1>Моя коллекция фото</h1>
@@ -57,9 +58,15 @@ function App() {
         </div>
       )}
       <ul className="pagination">
-        <li>1</li>
-        <li className="active">2</li>
-        <li>3</li>
+        {[...Array(5)].map((_, i) => (
+          <li
+            key={i}
+            className={i + 1 === page ? "active" : ""}
+            onClick={() => setPage(i + 1)}
+          >
+            {i + 1}
+          </li>
+        ))}
       </ul>
     </div>
   );
