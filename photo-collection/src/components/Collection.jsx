@@ -1,9 +1,7 @@
-import React from 'react'
+
 import './Collection.css'
 function Collection({name, images}) {
 
-
-  const [photos, setPhotos] = React.useState([]);
 
   return (
     <div className="collection">
